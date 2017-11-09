@@ -1,0 +1,8 @@
+curl
+liberasurecode-devel
+memcached
+pyxattr
+rsync-daemon # dist:f23,f24,f25,f26
+sqlite
+xfsprogs
+xinetd
