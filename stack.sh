@@ -211,39 +211,6 @@ extract_localrc_section $TOP_DIR/local.conf $TOP_DIR/localrc $TOP_DIR/.localrc.a
 # ``stackrc`` sources the ``localrc`` section of ``local.conf`` to allow you to
 # safely override those settings.
 
-
-#Adding for MEC installation
-LIB_DEST=/usr/local/lib/python2.7/dist-packages
-GITREPO["mec-tosca-parser"]=${APMECHORIZON_REPO:-${CUSTOM_BASE}/mec-tosca-parser.git}
-GITBRANCH["mec-tosca-parser"]=${APMECHORIZON_BRANCH:-master}
-GITDIR["mec-tosca-parser"]=/$LIB_DEST/toscaparser
-
-GITREPO["mec-heat-translator"]=${APMECHORIZON_REPO:-${CUSTOM_BASE}/mec-heat-translator.git}
-GITBRANCH["mec-heat-translator"]=${APMECHORIZON_BRANCH:-master}
-GITDIR["mec-heat-translator"]=$LIB_DEST/
-
-function mec_tosca_parser_install {
-    sudo su
-    git_clone_by_name "mec-tosca-parser"
-    setup_dev_lib "toscaparser"
-    cd $LIB_DEST/toscaparser
-    sudo python setup.py install
-    exit
-    cd $DEST
-}
-
-function mec_heat_translator_install {
-    sudo su
-    git_clone_by_name "mec-heat-translator"
-    setup_dev_lib "heat_translator"
-    cd $LIB_DEST/heat_translator
-    sudo python setup.py install
-    exit
-    cd $DEST
-}
-
-###########################################################################
-
 if [[ ! -r $TOP_DIR/stackrc ]]; then
     die $LINENO "missing $TOP_DIR/stackrc - did you grab more than just stack.sh?"
 fi
@@ -847,13 +814,6 @@ install_keystoneclient
 install_glanceclient
 install_cinderclient
 install_novaclient
-
-#Customize confifuration for MEC
-echo_summary "Installing tosca parser"
-mec_tosca_parser_install
-echo_summary "Installing heat translator"
-mec_heat_translator_install
-########################################################
 
 if is_service_enabled swift glance horizon; then
     install_swiftclient
