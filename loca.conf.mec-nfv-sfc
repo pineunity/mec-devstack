@@ -2,7 +2,7 @@
 ############################################################
 # Customize the following HOST_IP based on your installation
 ############################################################
-HOST_IP=127.0.0.1
+HOST_IP=203.203.203.6
 
 ADMIN_PASSWORD=devstack
 MYSQL_PASSWORD=devstack
@@ -19,17 +19,17 @@ SERVICE_TOKEN=devstack
 #NOVA
 #enable_service n-cell # it is not needed because devstack could help
 
-#LIBVIRT_TYPE=qemu #enable this option when installing devstack on top of vmware
+LIBVIRT_TYPE=qemu #enable this option when installing devstack on top of vmware
 
 # Pip
 PIP_USE_MIRRORS=False
 USE_GET_PIP=1
 
 #OFFLINE=False
-RECLONE=False
+#RECLONE=False
 
-#Multi-screen support now using systemd: https://docs.openstack.org/devstack/latest/systemd.html
-# USE_SCREEN=True
+#Multi-screen support
+USE_SCREEN=True
 
 # Logging
 LOGFILE=$DEST/logs/stack.sh.log
@@ -40,12 +40,7 @@ ENABLE_VERBOSE_LOG_LEVEL=True
 
 
 # Neutron ML2 with OpenVSwitch
-NEUTRON_CREATE_INITIAL_NETWORKS=True # it will create randomly router, network.
-# We should enable this option if we want vms in admin network to connect to Internet
-# ? use this when having floating ip from physical interface
-
-
-
+NEUTRON_CREATE_INITIAL_NETWORKS=False # it will create randomly router, network. We should enable this option if we want vms in admin network to connect to Internet
 Q_PLUGIN=ml2
 #Q_AGENT=openvswitch #this is default in devstack
 Q_ML2_TENANT_NETWORK_TYPE=vxlan #https://ask.openstack.org/en/question/51388/whats-the-difference-between-flat-gre-and-vlan-neutron-network-types/
@@ -57,17 +52,14 @@ Q_L3_ENABLED=True
 #Note: The following options worked well. The reason is we can fake thhe public network
 
 Q_USE_PROVIDERNET_FOR_PUBLIC=False
-FLOATING_RANGE=10.12.161.0/24
-Q_FLOATING_ALLOCATION_POOL="start=10.12.161.150,end=10.12.161.201"
-PUBLIC_NETWORK_NAME=external
-PUBLIC_NETWORK_GATEWAY=10.12.161.1
-PUBLIC_PHYSICAL_NETWORK=public
-
-
-#VIF_PLUGGING_IS_FATAL=False # this will make vm instantiation longer
+#FLOATING_RANGE=10.12.161.0/24
+#Q_FLOATING_ALLOCATION_POOL="start=10.12.161.150,end=10.12.161.201"
+#PUBLIC_NETWORK_NAME=external
+#PUBLIC_NETWORK_GATEWAY=10.12.161.1
+#PUBLIC_PHYSICAL_NETWORK=public
 
 # Required for l3-agent to connect to external-network-bridge
-PUBLIC_BRIDGE=br-ext
+#PUBLIC_BRIDGE=br-ext
 
 #PRIVATE NETWORK CONFIGURATION
 
@@ -80,33 +72,29 @@ PUBLIC_BRIDGE=br-ext
 NOVNC_BRANCH=v0.6.0
 
 #Heat
-enable_plugin heat https://github.com/openstack/heat.git
+enable_plugin heat https://github.com/openstack/heat.git  stable/pike
 
 #Mistral
-enable_plugin mistral https://github.com/openstack/mistral.git
+enable_plugin mistral https://github.com/openstack/mistral.git  stable/pike
 
-enable_plugin barbican https://github.com/openstack/barbican.git
+enable_plugin barbican https://github.com/openstack/barbican.git  stable/pike
 
 USE_BARBICAN=True
 
 #Apmec
 
-#enable_plugin tosca-parser https://pineunity:Doantung92*@github.com/pineunity/mec-tosca-parser.git
-
-#enable_plugin heat-translator https://pineunity:Doantung92*@github.com/pineunity/mec-heat-translator.git
-
 enable_plugin python-apmecclient https://pineunity:Doantung92*@github.com/pineunity/python-apmecclient.git
 
 enable_plugin apmec-horizon https://pineunity:Doantung92*@github.com/pineunity/apmec-horizon.git
 
+
+SFC_UPDATE_OVS=False
+enable_plugin networking-sfc git://git.openstack.org/openstack/networking-sfc stable/pike
+
 enable_plugin apmec https://pineunity:Doantung92*@github.com/pineunity/apmec.git master
 
+enable_plugin tacker https://pineunity:Doantung92*@github.com/pineunity/mano-tacker.git
 
-
-#Ceilometer
-#CEILOMETER_BACKEND=mongodb
-enable_plugin ceilometer https://git.openstack.org/openstack/ceilometer
-enable_plugin aodh https://git.openstack.org/openstack/aodh
 
 #Disable security groups
 Q_USE_SECGROUP=False
