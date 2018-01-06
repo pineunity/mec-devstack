@@ -1,0 +1,116 @@
+[[local|localrc]]
+############################################################
+# Customize the following HOST_IP based on your installation
+############################################################
+HOST_IP=192.168.0.15
+
+ADMIN_PASSWORD=devstack
+MYSQL_PASSWORD=devstack
+RABBIT_PASSWORD=devstack
+SERVICE_PASSWORD=$ADMIN_PASSWORD
+SERVICE_TOKEN=devstack
+
+
+
+############################################################
+# Customize the following section based on your installation
+############################################################
+
+
+LIBVIRT_TYPE=qemu #enable this option when installing devstack on top of vmware
+
+# Pip
+PIP_USE_MIRRORS=False
+USE_GET_PIP=1
+
+#OFFLINE=False
+RECLONE=False
+
+
+GIT_BASE=${GIT_BASE:-https://github.com}
+
+# Logging
+LOGFILE=$DEST/logs/stack.sh.log
+SCREEN_LOGDIR=$DEST/logs/screen
+VERBOSE=True
+ENABLE_DEBUG_LOG_LEVEL=True
+ENABLE_VERBOSE_LOG_LEVEL=True
+
+
+
+# Enable mechanism driver: https://wiki.openstack.org/wiki/Neutron/ML2
+
+#PUBLIC NETWORK CONFIGURATION
+#Note: The following options worked well. The reason is we can fake thhe public network
+
+Q_USE_PROVIDERNET_FOR_PUBLIC=True
+FLOATING_RANGE="192.168.0.0/24"
+IPV4_ADDRS_SAFE_TO_USE="10.0.0.0/24"
+Q_FLOATING_ALLOCATION_POOL=start=192.168.0.10,end=192.168.0.40
+PUBLIC_NETWORK_GATEWAY="192.168.0.1"
+PUBLIC_INTERFACE=ens33
+
+# Required for l3-agent to connect to external-network-bridge
+PUBLIC_BRIDGE=br-ex
+OVS_PHYSICAL_BRIDGE=br-ex
+OVS_BRIDGE_MAPPINGS=public:br-ex
+
+
+
+#PRIVATE NETWORK CONFIGURATION
+
+#The following options is only visible for private network (ex. demo project) and invisible for admin network
+
+#NETWORK_GATEWAY=${NETWORK_GATEWAY:-15.0.0.1}
+#FIXED_RANGE=${FIXED_RANGE:-15.0.0.0/24}
+
+
+NOVNC_BRANCH=v0.6.0
+
+#Heat
+enable_plugin heat https://github.com/openstack/heat.git  stable/pike
+
+#Mistral
+#enable_plugin mistral https://github.com/openstack/mistral.git  stable/pike
+
+enable_plugin mistral https://github.com/pineunity/mec-mistral.git master
+
+enable_plugin barbican https://github.com/openstack/barbican.git  stable/pike
+
+USE_BARBICAN=True
+
+#Apmec
+
+enable_plugin python-apmecclient https://pineunity:Doantung92*@github.com/pineunity/python-apmecclient.git  apmec-nfv
+
+enable_plugin apmec-horizon https://pineunity:Doantung92*@github.com/pineunity/apmec-horizon.git
+
+
+SFC_UPDATE_OVS=False
+enable_plugin networking-sfc https://github.com/openstack/networking-sfc.git stable/pike
+
+enable_plugin apmec https://pineunity:Doantung92*@github.com/pineunity/apmec.git apmec-nfv
+
+
+USE_BARBICAN=True
+enable_plugin tacker https://pineunity:Doantung92*@github.com/pineunity/mano-tacker.git  tacker-mec
+
+
+#Disable security groups
+Q_USE_SECGROUP=False
+LIBVIRT_FIREWALL_DRIVER=nova.virt.firewall.NoopFirewallDriver
+
+enable_service n-novnc
+enable_service n-cauth
+
+disable_service tempest
+
+disable_service swift
+
+# Disable Nova Networking
+disable_service n-net
+
+# Cinder
+disable_service c-api
+disable_service c-sch
+disable_service c-vol
